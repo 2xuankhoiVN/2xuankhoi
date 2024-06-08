@@ -81,7 +81,7 @@ async function startBot() {
         bot.on('error', (err) => {
             console.error(`Bot gặp lỗi: ${err}`);
             shouldRestart = true; // Đặt cờ để yêu cầu khởi động lại
-            reject(err); // Từ chối promise khi gặp lỗi
+            resolve(); // Hoàn thành promise khi gặp lỗi
         });
 
         // Lắng nghe sự kiện kết thúc (ngắt kết nối)
@@ -98,6 +98,7 @@ async function startBot() {
         bot.on('kicked', (reason) => {
             console.log(`Bot đã bị đá khỏi server, lý do: ${reason}`);
             shouldRestart = true; // Đặt cờ để yêu cầu khởi động lại
+            resolve(); // Hoàn thành promise khi bị đá
         });
 
         // Lắng nghe sự kiện đăng nhập để hoàn thành promise
@@ -118,7 +119,7 @@ async function startBotWithRetries() {
             // Nếu bot đã kết nối và đang chạy, thoát khỏi vòng lặp
             if (!shouldRestart) {
                 console.log('Bot đã kết nối thành công.');
-                break;
+                continue; // Tiếp tục vòng lặp để đảm bảo bot luôn chạy
             }
         } catch (err) {
             console.error(`Lỗi khi khởi động bot: ${err}`);
