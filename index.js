@@ -63,7 +63,7 @@ async function startBot() {
             }
             console.log(`Trạng thái spawn sau khi cập nhật: ${spawnState}`); // Ghi log trạng thái spawn
             bot.setMaxListeners(5); // Tăng giới hạn listeners cho sự kiện 'windowOpen'
-            bot.chat('/login thegold780'); // Gửi lệnh đăng nhập
+            bot._client.write('chat', { message: '/login thegold780' }); // Gửi lệnh đăng nhập
             await sleep(4000); // Chờ 4 giây để đảm bảo đăng nhập được xử lý
             console.log('Đã nhập mật khẩu'); // Ghi log
 
@@ -85,19 +85,21 @@ async function startBot() {
         });
 
         // Lắng nghe sự kiện kết thúc (ngắt kết nối)
-        bot.on('end', (reason) => {
+        bot.on('end', async (reason) => {
             console.log(`Bot đã ngắt kết nối, lý do: ${reason}`);
             shouldRestart = true; // Đặt cờ để yêu cầu khởi động lại
             spawnState = 0; // Đặt lại trạng thái spawn về 0 khi ngắt kết nối
             spawnCount = 0; // Đặt lại biến đếm spawn về 0
             stopActivateItemContinuously(); // Dừng kích hoạt liên tục khi ngắt kết nối
+            await sleep(5000); // Chờ 5 giây trước khi thử lại
             resolve(); // Hoàn thành promise khi ngắt kết nối
         });
 
         // Lắng nghe sự kiện bị đá khỏi server
-        bot.on('kicked', (reason) => {
+        bot.on('kicked', async (reason) => {
             console.log(`Bot đã bị đá khỏi server, lý do: ${reason}`);
             shouldRestart = true; // Đặt cờ để yêu cầu khởi động lại
+            await sleep(5000); // Chờ 5 giây trước khi thử lại
             resolve(); // Hoàn thành promise khi bị đá
         });
 
@@ -119,6 +121,7 @@ async function startBotWithRetries() {
             // Nếu bot đã kết nối và đang chạy, thoát khỏi vòng lặp
             if (!shouldRestart) {
                 console.log('Bot đã kết nối thành công.');
+                break; // Thoát khỏi vòng lặp nếu bot đã kết nối thành công
             }
         } catch (err) {
             console.error(`Lỗi khi khởi động bot: ${err}`);
