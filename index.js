@@ -23,7 +23,7 @@ async function startBot() {
         });
 
         function onWindowOpen(window) {
-            console.log('Đã vào sever'); // Ghi log
+            console.log('Đã vào server'); // Ghi log
             bot.clickWindow(11, 0, 0); // Click vào slot 11 trong cửa sổ
         }
 
@@ -57,6 +57,9 @@ async function startBot() {
             if (spawnCount === 2) {
                 spawnState = 1; // Đặt thành 1 khi spawn lần thứ hai
                 removeWindowOpenListeners(); // Gỡ bỏ tất cả các listeners của 'windowOpen'
+            } else if (spawnCount === 3) {
+                spawnState = 0; // Reset spawnState về 0 khi spawn lần thứ ba
+                spawnCount = 0; // Đặt lại spawnCount về 0
             }
             console.log(`Trạng thái spawn sau khi cập nhật: ${spawnState}`); // Ghi log trạng thái spawn
             bot.setMaxListeners(5); // Tăng giới hạn listeners cho sự kiện 'windowOpen'
@@ -105,7 +108,7 @@ async function startBotWithRetries() {
     while (true) {
         try {
             await startBot();
-            await sleep(6000); // Chờ 10 giây để kiểm tra nếu bot kết nối thành công
+            await sleep(6000); // Chờ 6 giây để kiểm tra nếu bot kết nối thành công
             // Nếu bot đã kết nối và đang chạy, thoát khỏi vòng lặp
             if (!shouldRestart) {
                 console.log('Bot đã kết nối thành công.');
@@ -122,4 +125,4 @@ async function startBotWithRetries() {
 // Khởi động bot với logic retry
 startBotWithRetries();
 
-console.log('Bạn đang dùng index 7')
+console.log('Bạn đang dùng index 8')
