@@ -30,7 +30,7 @@ async function startBot() {
         // Hàm để liên tục thiết lập vị trí thanh công cụ nhanh và kích hoạt vật phẩm
         async function activateItemContinuously() {
             while (spawnState === 0) {
-                bot.setQuickBarSlot(0);
+                bot.quickBarSlot = 0; // Chọn thanh công cụ nhanh tại vị trí 0
                 bot.activateItem();
                 await sleep(3500); // Chờ 3,5 giây
             }
@@ -119,7 +119,6 @@ async function startBotWithRetries() {
             // Nếu bot đã kết nối và đang chạy, thoát khỏi vòng lặp
             if (!shouldRestart) {
                 console.log('Bot đã kết nối thành công.');
-                continue; // Tiếp tục vòng lặp để đảm bảo bot luôn chạy
             }
         } catch (err) {
             console.error(`Lỗi khi khởi động bot: ${err}`);
