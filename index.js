@@ -48,7 +48,7 @@ async function startBot() {
         function removeWindowOpenListeners() {
             bot.removeListener('windowOpen', onWindowOpen);
         }
-        
+
         // Lắng nghe sự kiện khi bot xuất hiện trong thế giới
         bot.on('spawn', async () => {
             shouldRestart = false;
@@ -85,13 +85,19 @@ async function startBot() {
         });
 
         // Lắng nghe sự kiện kết thúc (ngắt kết nối)
-        bot.on('end', () => {
-            console.log('Bot đã ngắt kết nối');
+        bot.on('end', (reason) => {
+            console.log(`Bot đã ngắt kết nối, lý do: ${reason}`);
             shouldRestart = true; // Đặt cờ để yêu cầu khởi động lại
             spawnState = 0; // Đặt lại trạng thái spawn về 0 khi ngắt kết nối
             spawnCount = 0; // Đặt lại biến đếm spawn về 0
             stopActivateItemContinuously(); // Dừng kích hoạt liên tục khi ngắt kết nối
             resolve(); // Hoàn thành promise khi ngắt kết nối
+        });
+
+        // Lắng nghe sự kiện bị đá khỏi server
+        bot.on('kicked', (reason) => {
+            console.log(`Bot đã bị đá khỏi server, lý do: ${reason}`);
+            shouldRestart = true; // Đặt cờ để yêu cầu khởi động lại
         });
 
         // Lắng nghe sự kiện đăng nhập để hoàn thành promise
@@ -125,4 +131,4 @@ async function startBotWithRetries() {
 // Khởi động bot với logic retry
 startBotWithRetries();
 
-console.log('Bạn đang dùng index 8')
+console.log('Bạn đang dùng index 8');
