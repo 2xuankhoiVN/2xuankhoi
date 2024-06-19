@@ -2,10 +2,10 @@ const mineflayer = require('mineflayer');
 
 function createBot() {
     const bot = mineflayer.createBot({
-        host: 'vinamc.net',
+        host: 'emerald.magmanode.com',
         username: 'Herobrine',
         auth: 'offline',
-        port: 25565,
+        port: 27608,
     });
 
     // Function to pause execution for a given amount of milliseconds
